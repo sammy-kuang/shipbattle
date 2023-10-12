@@ -10,8 +10,8 @@ public class Board {
     public static final char HIT_SPOT = 'X';
     public static final char MISS_SPOT = 'O';
 
-    private ArrayList<Ship> ships;
-    private int boardSize;
+    private final ArrayList<Ship> ships;
+    private final int boardSize;
     private char[][] board; // where the first index represents Y and second index represents x
 
     // REQUIRES: 10 >= boardSize > 4
@@ -26,7 +26,6 @@ public class Board {
                 board[y][x] = EMPTY_SPOT;
             }
         }
-
     }
 
     /*
@@ -143,8 +142,18 @@ public class Board {
         board[y][x] = identifier;
     }
 
+    // EFFECTS: Generate a single character identifier for a ship that is not already used
+    // REQUIRES: ships.size() < 57 (allows for a variety of alphanumeric characters + special chars)
+    public char generateIdentifier() {
+        return (char)(65 + ships.size());
+    }
+
     public char[][] getBoard() {
         return board;
+    }
+
+    public int getBoardSize() {
+        return boardSize;
     }
 
     public List<Ship> getShips() {

@@ -4,12 +4,13 @@ package model;
 public class Ship {
     public static final int ALIVE = 0;
     public static final int DEAD = 1;
+    public static final int SCATTER_SHOT_LENGTH = 4;
 
-    private int length;
-    private int[] health;
-    private char identifier;
-    private Orientation orientation;
-    private Position position;
+    private final int length;
+    private final int[] health;
+    private final char identifier;
+    private final Orientation orientation;
+    private final Position position;
 
     // REQUIRES: length > 0
     public Ship(int length, char identifier, Position position, Orientation orientation) {

@@ -4,8 +4,8 @@ package model;
 // an increasing y represents moving downwards
 // and an increasing x represents moving right
 public class Position {
-    private int posX;
-    private int posY;
+    private final int posX;
+    private final int posY;
 
     // REQUIRES: x > 0 and y > 0
     public Position(int x, int y) {

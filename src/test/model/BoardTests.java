@@ -12,16 +12,6 @@ class BoardTests {
         board = new Board(10);
     }
 
-    void printBoard() {
-        for (int y = 0; y < 10; y++) {
-            for (int x = 0; x < 10; x++) {
-                System.out.print(board.getBoard()[y][x]);
-            }
-            System.out.println();
-        }
-    }
-
-
     @Test
     void testEmptyBoard() {
         assertTrue(board.getShips().isEmpty());
@@ -32,6 +22,13 @@ class BoardTests {
             }
         }
 
+    }
+
+    @Test
+    void testAddDuplicateShip() {
+        Ship a = new Ship(4, 'A', new Position(0, 0), Orientation.LeftRight);
+        assertTrue(board.addShip(a));
+        assertFalse(board.addShip(a));
     }
 
     @Test
@@ -196,4 +193,17 @@ class BoardTests {
         assertFalse(a.isAlive());
     }
 
+    @Test
+    void testDestroyAllShips() {
+        Ship a = new Ship(4, 'A', new Position(0, 0), Orientation.LeftRight);
+        assertTrue(board.addShip(a));
+        assertTrue(board.fireOnPosition(new Position(0, 0)));
+        assertTrue(board.fireOnPosition(new Position(1, 0)));
+        assertTrue(board.fireOnPosition(new Position(2, 0)));
+        assertTrue(board.fireOnPosition(new Position(3, 0)));
+        assertFalse(board.fireOnPosition(new Position(4, 0)));
+
+        assertFalse(a.isAlive());
+        assertFalse(board.isAlive());
+    }
 }
