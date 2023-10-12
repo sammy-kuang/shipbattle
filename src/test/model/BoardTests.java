@@ -21,7 +21,17 @@ class BoardTests {
                 assertEquals(Board.EMPTY_SPOT, board.getBoard()[y][x]);
             }
         }
+    }
 
+    @Test
+    void testBoardSize() {
+        assertTrue(board.getShips().isEmpty());
+        assertEquals(10, board.getBoardSize());
+    }
+
+    @Test
+    void testIdentifiers() {
+        assertEquals('A', board.generateIdentifier());
     }
 
     @Test

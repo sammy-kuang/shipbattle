@@ -76,17 +76,28 @@ public class ConsolePlayer extends Controller {
         System.out.println("When prompted for a coordinate (x,y), (0, 0) is relative to the top left.");
         System.out.println("Positive in the x-axis is left, and positive in the y-axis is down.");
         System.out.println("This means (1,1) is 1 unit to the right, and 1 down.");
-        System.out.println("In terms of firing: ");
+        System.out.println("\nIn terms of firing: ");
         printFireHelp();
+        System.out.println("\nIn terms of interpreting the map: ");
+        printMapHelp();
+    }
 
+    // EFFECTS: Show the user a help message on how to interpret the "map" of the game
+    public void printMapHelp() {
+        System.out.println("When you view the your own fleet, you may see a variety of symbols");
+        System.out.printf("%c represents an empty spot on the board, unoccupied.\n", Board.EMPTY_SPOT);
+        System.out.printf("%c represents an where a shell was fired on the board, but missed.\n", Board.MISS_SPOT);
+        System.out.printf("%c represents an where a shell was fired on the board, and hit!.\n", Board.HIT_SPOT);
+        System.out.println("All other sequences of characters (a-Z), symbols, etc, represent a ship.\n");
+        System.out.println("When you view the battlefield, you do not see the enemy ships! Just what you've fired at.");
     }
 
     // EFFECTS: Show the user a help message on the benefits of firing with different ships
     public void printFireHelp() {
         System.out.printf("If we use a smaller ship (size <= %d)", Ship.SCATTER_SHOT_LENGTH);
-        System.out.println(", we can load a scattershot shell -\n a shell that fires a smaller shell nearby.");
+        System.out.println(", we can load a scattershot shell -\na shell that fires a smaller shell nearby.");
         System.out.printf("If we use a bigger ship (size > %d),", Ship.SCATTER_SHOT_LENGTH);
-        System.out.println(" we can load multiple shells -\n so we can fire multiple times.");
+        System.out.println(" we can load multiple shells -\nso we can fire multiple times.");
     }
 
     // EFFECTS: Query the user to fire a scattershot at a position, returning number of hits based on scatter shell

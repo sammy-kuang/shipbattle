@@ -21,6 +21,7 @@ public class Ship {
         this.orientation = orientation;
     }
 
+    // EFFECTS: Return whether this ship is alive or not
     public boolean isAlive() {
         for (int i = 0; i < length; i++) {
             if (health[i] == ALIVE) {

@@ -1,6 +1,8 @@
-package model;
+package ui;
 
-// Represents an abstract Controller that can view and play the game.
+import model.Board;
+
+// Represents an abstract Controller that can view(!!) and play the game.
 // This can either be a player or an "AI."
 public abstract class Controller {
     private Board board;

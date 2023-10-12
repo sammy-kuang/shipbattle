@@ -1,13 +1,8 @@
 package ui;
 
-import model.Board;
-import model.Controller;
-import model.Orientation;
-import model.Position;
+import model.*;
 
 public class ConsoleGame {
-
-
     public ConsoleGame() throws InterruptedException {
         this.run();
     }
