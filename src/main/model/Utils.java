@@ -2,7 +2,7 @@ package model;
 
 // A set of static utilities that we can use, not necessarily
 // belonging to a single concept
-public class Utils {
+public final class Utils {
     /*
     EFFECTS:
         - If value is less than low, return low
