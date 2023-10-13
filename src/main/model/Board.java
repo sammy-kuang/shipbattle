@@ -157,18 +157,16 @@ public class Board {
         return new Position(x,y);
     }
 
-    // EFFECTS: Generate a random position on the board around or on position
+    // EFFECTS: Generate a random position on the board around or on position using random
     // REQUIRES: position is within the board
-    public Position generateRandomPosition(Position position) {
+    public Position generateRandomPosition(Position position, Random random) {
         Random r = new Random();
-        int nx;
-        int ny;
+        int n;
 
-        nx = r.nextInt() % 2 == 0 ? -1 : 1;
-        ny = r.nextInt() % 2 == 0 ? -1 : 1;
+        n = r.nextInt() % 2 == 0 ? -1 : 1;
 
-        int x = Utils.clamp(position.getPosX() + nx, 0, getBoardSize() - 1);
-        int y = Utils.clamp(position.getPosY() + ny, 0, getBoardSize() - 1);
+        int x = Utils.clamp(position.getPosX() + n, 0, getBoardSize() - 1);
+        int y = Utils.clamp(position.getPosY() + n, 0, getBoardSize() - 1);
         return new Position(x, y);
     }
 
