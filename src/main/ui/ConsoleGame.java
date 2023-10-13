@@ -87,7 +87,7 @@ public class ConsoleGame {
 
     // EFFECTS: Run the game in a console window
     void run() {
-        System.out.println("Welcome to 𝕊𝕙𝕚𝕡𝕓𝕒𝕥𝕥𝕝𝕖!");
+        System.out.println("Welcome to Shipbattle!");
         String boardSizeMessage = "Please insert a board size where 10 <= size <= 25  (recommended 10): ";
         int boardSize = ScannerHelper.clampedQuery(boardSizeMessage, 10, 25);
         String numShipsMessage = "Please insert the number of points for ships (even & between 10-16): ";
