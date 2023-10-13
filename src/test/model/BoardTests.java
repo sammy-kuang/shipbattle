@@ -2,6 +2,8 @@ package model;
 
 import org.junit.jupiter.api.*;
 
+import java.util.Random;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class BoardTests {
@@ -230,9 +232,29 @@ class BoardTests {
     @Test
     void testRandomPositionAroundPos() {
         Position i = new Position(3, 3);
-        Position a = board.generateRandomPosition(i);
+        // TESTING RANDOM SO AWESOME!!!
+        Random odd = new Random() {
+            @Override
+            public int nextInt() {
+                return 1;
+            }
+        };
+
+        Random even = new Random() {
+            @Override
+            public int nextInt() {
+                return 2;
+            }
+        };
+
+        Position a = board.generateRandomPosition(i, odd);
         int a_x = Math.abs(i.getPosX() - a.getPosX());
         int a_y = Math.abs(i.getPosY() - a.getPosY());
         assertTrue(a_x == 1 && a_y == 1);
+
+        Position b = board.generateRandomPosition(i, even);
+        int b_x = Math.abs(i.getPosX() - a.getPosX());
+        int b_y = Math.abs(i.getPosY() - a.getPosY());
+        assertTrue(b_x == 1 && b_y == 1);
     }
 }

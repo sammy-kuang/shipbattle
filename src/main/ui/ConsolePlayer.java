@@ -120,7 +120,7 @@ public class ConsolePlayer extends Controller {
         System.out.println("Where shall we fire?");
         Position p = ConsoleGame.queryForPosition(getOpponentBoard().getBoardSize());
         int boardSize = getOpponentBoard().getBoardSize();
-        Position scatter = getOpponentBoard().generateRandomPosition(p);
+        Position scatter = getOpponentBoard().generateRandomPosition(p, new Random());
         int a = getOpponentBoard().fireOnPosition(p) ? 1 : 0;
         System.out.printf("Shell scattered, and landed on (%d, %d)!\n", scatter.getPosX(), scatter.getPosY());
         int b = getOpponentBoard().fireOnPosition(scatter) ? 1 : 0;
