@@ -253,8 +253,8 @@ class BoardTests {
         assertTrue(a_x == 1 && a_y == 1);
 
         Position b = board.generateRandomPosition(i, even);
-        int b_x = Math.abs(i.getPosX() - a.getPosX());
-        int b_y = Math.abs(i.getPosY() - a.getPosY());
+        int b_x = Math.abs(i.getPosX() - b.getPosX());
+        int b_y = Math.abs(i.getPosY() - b.getPosY());
         assertTrue(b_x == 1 && b_y == 1);
     }
 }
