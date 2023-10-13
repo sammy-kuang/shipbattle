@@ -49,7 +49,7 @@ public class RandomController extends Controller {
 
     @Override
     public void placeShips(int number) {
-        int ships = 3;
+        int ships = 2;
         int shipSizes = number / ships;
 
         while (ships > 0) {

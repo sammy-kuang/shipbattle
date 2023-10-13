@@ -216,4 +216,23 @@ class BoardTests {
         assertFalse(a.isAlive());
         assertFalse(board.isAlive());
     }
+
+    @Test
+    void testRandomPosition() {
+        Position p = board.generateRandomPosition();
+        assertNotNull(p);
+        assertTrue(p.getPosX() >= 0);
+        assertTrue(p.getPosX() < board.getBoardSize());
+        assertTrue(p.getPosY() >= 0);
+        assertTrue(p.getPosY() < board.getBoardSize());
+    }
+
+    @Test
+    void testRandomPositionAroundPos() {
+        Position i = new Position(3, 3);
+        Position a = board.generateRandomPosition(i);
+        int a_x = Math.abs(i.getPosX() - a.getPosX());
+        int a_y = Math.abs(i.getPosY() - a.getPosY());
+        assertTrue(a_x == 1 && a_y == 1);
+    }
 }

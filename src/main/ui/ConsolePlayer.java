@@ -61,9 +61,16 @@ public class ConsolePlayer extends Controller {
      */
     public Ship selectShip() {
         System.out.print("Pick a valid ship identifier: ");
-        char i = ScannerHelper.in.nextLine().charAt(0);
+        String i;
+        do {
+            i = ScannerHelper.in.nextLine();
+            if (i.length() == 0) {
+                System.out.println("Invalid, try again.");
+            }
+        } while (i.length() == 0);
+
         for (Ship sh : getBoard().getShips()) {
-            if (sh.getIdentifier() == i && sh.isAlive()) {
+            if (sh.getIdentifier() == i.charAt(0) && sh.isAlive()) {
                 return sh;
             }
         }
@@ -74,7 +81,7 @@ public class ConsolePlayer extends Controller {
     // EFFECTS: Print the user a help screen
     public void printHelp() {
         System.out.println("When prompted for a coordinate (x,y), (0, 0) is relative to the top left.");
-        System.out.println("Positive in the x-axis is left, and positive in the y-axis is down.");
+        System.out.println("Positive in the x-axis is right, and positive in the y-axis is down.");
         System.out.println("This means (1,1) is 1 unit to the right, and 1 down.");
         System.out.println("\nIn terms of firing: ");
         printFireHelp();
@@ -108,18 +115,10 @@ public class ConsolePlayer extends Controller {
         System.out.println("Where shall we fire?");
         Position p = ConsoleGame.queryForPosition(getOpponentBoard().getBoardSize());
         int boardSize = getOpponentBoard().getBoardSize();
-        Random r = new Random();
-        int x = p.getPosX() + (-1 + (r.nextInt(3)));
-        int y = p.getPosY() + (-1 + (r.nextInt(3)));
-        x = (x < 0 || x > boardSize - 1) ? p.getPosX() : x;
-        y = (y < 0 || y > boardSize - 1) ? p.getPosY() : y;
-
-        Position scatter = new Position(x, y);
-
+        Position scatter = getOpponentBoard().generateRandomPosition(p);
         int a = getOpponentBoard().fireOnPosition(p) ? 1 : 0;
-        System.out.printf("Shell scattered, and landed on (%d, %d)!\n", scatter.getPosX(), scatter.getPosX());
+        System.out.printf("Shell scattered, and landed on (%d, %d)!\n", scatter.getPosX(), scatter.getPosY());
         int b = getOpponentBoard().fireOnPosition(scatter) ? 1 : 0;
-
         return a + b;
     }
 

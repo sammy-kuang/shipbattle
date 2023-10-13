@@ -3,7 +3,7 @@ package ui;
 import model.*;
 
 public class ConsoleGame {
-    public ConsoleGame() throws InterruptedException {
+    public ConsoleGame() {
         this.run();
     }
 
@@ -38,7 +38,7 @@ public class ConsoleGame {
 
     // EFFECTS: Clear the console by spamming new lines
     public static void clearConsole() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) {
             System.out.println();
         }
     }
@@ -57,30 +57,42 @@ public class ConsoleGame {
         return o == 0 ? Orientation.LeftRight : Orientation.UpDown;
     }
 
+    void playGame(int boardSize, int numShips) {
+        try {
+            Board playerBoard = new Board(boardSize);
+            Board opponentBoard = new Board(boardSize);
+            int turn = 0;
+            ConsolePlayer p = new ConsolePlayer(playerBoard, opponentBoard);
+            RandomController o = new RandomController(opponentBoard, playerBoard);
+            Controller[] players = new Controller[]{p, o};
+            p.placeShips(numShips);
+            o.placeShips(numShips);
+            System.out.println("\nGame is ready to go!");
+            while (playerBoard.isAlive() && opponentBoard.isAlive()) {
+                players[turn].turn();
+                turn = (turn + 1) % 2;
+                Thread.sleep(2000);
+            }
+            if (playerBoard.isAlive()) {
+                System.out.println("Congratulations captain, we won!");
+            } else {
+                System.out.println("We lost...");
+            }
+        } catch (InterruptedException e) {
+            System.err.println(e);
+        }
+    }
+
     // EFFECTS: Run the game in a console window
-    void run() throws InterruptedException {
-        String boardSizeMessage = "Please insert a board size where 25 > size > 10 (recommended 10): ";
+    void run() {
+        System.out.println("Welcome to 𝕊𝕙𝕚𝕡𝕓𝕒𝕥𝕥𝕝𝕖!");
+        String boardSizeMessage = "Please insert a board size where 10 <= size <= 25  (recommended 10): ";
         int boardSize = ScannerHelper.clampedQuery(boardSizeMessage, 10, 25);
         String numShipsMessage = "Please insert the number of points for ships (even & between 10-16): ";
         int numShips;
         do {
             numShips = ScannerHelper.clampedQuery(numShipsMessage, 10, 16);
         } while (numShips % 2 != 0);
-        Board playerBoard = new Board(boardSize);
-        Board opponentBoard = new Board(boardSize);
-        int turn = 0;
-        ConsolePlayer p = new ConsolePlayer(playerBoard, opponentBoard);
-        RandomController o = new RandomController(opponentBoard, playerBoard);
-        Controller[] players = new Controller[]{p, o};
-        p.placeShips(numShips);
-        o.placeShips(numShips);
-        Thread.sleep(1000);
-        System.out.println("\nGame is ready to go!");
-        while (playerBoard.isAlive() && opponentBoard.isAlive()) {
-            players[turn].turn();
-            turn = (turn + 1) % 2;
-            Thread.sleep(2000);
-        }
-
+        playGame(boardSize, numShips);
     }
 }

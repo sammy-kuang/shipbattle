@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 // Represents the board for a single player. This is where a player would place their own ships.
 public class Board {
@@ -146,6 +147,29 @@ public class Board {
     // REQUIRES: ships.size() < 57 (allows for a variety of alphanumeric characters + special chars)
     public char generateIdentifier() {
         return (char)(65 + ships.size());
+    }
+
+    // EFFECTS: Generate a random position within the board
+    public Position generateRandomPosition() {
+        Random r = new Random();
+        int x = r.nextInt(getBoardSize());
+        int y = r.nextInt(getBoardSize());
+        return new Position(x,y);
+    }
+
+    // EFFECTS: Generate a random position on the board around or on position
+    // REQUIRES: position is within the board
+    public Position generateRandomPosition(Position position) {
+        Random r = new Random();
+        int nx;
+        int ny;
+
+        nx = r.nextInt() % 2 == 0 ? -1 : 1;
+        ny = r.nextInt() % 2 == 0 ? -1 : 1;
+
+        int x = Utils.clamp(position.getPosX() + nx, 0, getBoardSize() - 1);
+        int y = Utils.clamp(position.getPosY() + ny, 0, getBoardSize() - 1);
+        return new Position(x, y);
     }
 
     public char[][] getBoard() {
