@@ -3,6 +3,12 @@ package model;
 // A set of static utilities that we can use, not necessarily
 // belonging to a single concept
 public final class Utils {
+
+    // EFFECTS: No instantiating
+    private Utils() {
+
+    }
+
     /*
     EFFECTS:
         - If value is less than low, return low
