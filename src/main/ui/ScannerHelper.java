@@ -3,6 +3,7 @@ package ui;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+// A class that allows us to manipulate terminal input
 public class ScannerHelper {
     static Scanner in = new Scanner(System.in);
 

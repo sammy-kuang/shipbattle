@@ -4,31 +4,38 @@ import model.*;
 
 import java.util.Random;
 
+// Represents an "AI" playing the game on a console version of the game
 public class RandomController extends Controller {
-
+    // EFFECTS: Create an AI capable of playing the game in the terminal
     public RandomController(Board ourBoard, Board opponent) {
         this.setBoard(ourBoard);
         this.setOpponentBoard(opponent);
     }
 
+    // EFFECTS: Visualize our board - in the context of the AI, does nothing.
     @Override
     public void viewBoard() {
     }
 
+    // EFFECTS: Peek at the battlefield - in the context of the AI, does nothing.
     @Override
     public void peek() {
     }
 
+    // EFFECTS: View the opponent's game board - in the context of the AI, does nothing.
     @Override
     public void cheatViewEnemy() {
     }
 
+    // EFFECTS: Run the AI's turn
     @Override
     public void turn() {
         System.out.println("[AI] My turn!");
         fire();
     }
 
+    // EFFECTS: Fire on the opponent's board randomly
+    // MODIFIES: this
     @Override
     public void fire() {
         try {
@@ -47,6 +54,8 @@ public class RandomController extends Controller {
         }
     }
 
+    // EFFECTS: Place ships throughout the board randomly for the AI
+    // MODIFIES: this
     @Override
     public void placeShips(int number) {
         int ships = 2;

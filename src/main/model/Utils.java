@@ -1,5 +1,7 @@
 package model;
 
+// A set of static utilities that we can use, not necessarily
+// belonging to a single concept
 public class Utils {
     /*
     EFFECTS:

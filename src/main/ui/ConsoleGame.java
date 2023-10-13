@@ -2,7 +2,9 @@ package ui;
 
 import model.*;
 
+// Represent an instance of the game running in the terminal
 public class ConsoleGame {
+    // EFFECTS: Create and run an instance of the game in the terminal
     public ConsoleGame() {
         this.run();
     }

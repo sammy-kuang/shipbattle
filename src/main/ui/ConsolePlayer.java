@@ -6,29 +6,34 @@ import java.util.Random;
 
 // Represents a Player that is playing through a console
 public class ConsolePlayer extends Controller {
-
+    // EFFECTS: Create a player capable of playing the game through the terminal
     public ConsolePlayer(Board players, Board opponent) {
         this.setBoard(players);
         this.setOpponentBoard(opponent);
     }
 
+    // EFFECTS: Print out the board for the player to view
     @Override
     public void viewBoard() {
         System.out.println("Captain, this is our fleet right now:");
         ConsoleGame.printBoard(this.getBoard());
     }
 
+    // EFFECTS: Print out the battlefield for the player to view
     @Override
     public void peek() {
         System.out.println("Captain, this is what we've shot at..");
         ConsoleGame.printObfuscatedBoard(this.getOpponentBoard());
     }
 
+    // EFFECTS: Print out the opponent's board for the player to view
     @Override
     public void cheatViewEnemy() {
         ConsoleGame.printBoard(this.getOpponentBoard());
     }
 
+    // EFFECTS: Run the player's turn in the game
+    // MODIFIES: this
     @Override
     public void turn() {
         System.out.println("\nOur turn Captain. What would you like to do?");
@@ -138,6 +143,8 @@ public class ConsolePlayer extends Controller {
         return num;
     }
 
+    // EFFECTS: Query the user to select a ship to fire with
+    // MODIFIES: this
     @Override
     public void fire() {
         try {
@@ -186,6 +193,9 @@ public class ConsolePlayer extends Controller {
         return new Ship(length, getBoard().generateIdentifier(), p, o);
     }
 
+    // EFFECTS: Query the player to place down their ships
+    // MODIFIES: this
+    // REQUIRES: number > 0
     @Override
     public void placeShips(int number) {
         int points = number;
