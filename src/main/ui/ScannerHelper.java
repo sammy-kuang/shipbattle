@@ -27,4 +27,14 @@ public class ScannerHelper {
         }
     }
 
+    // EFFECTS: Query the user for a Yes or No response
+    public static boolean yesNoQuery(String message) {
+        System.out.print(message + " (Y/N): ");
+        String o = in.nextLine();
+        if (o.length() < 1) {
+            System.out.println("That's not quite right, try again.");
+            return yesNoQuery(message);
+        }
+        return o.toLowerCase().charAt(0) == 'y';
+    }
 }

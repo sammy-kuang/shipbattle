@@ -1,7 +1,9 @@
 package ui;
 
 import model.*;
+import persistence.PersistenceManager;
 
+import java.io.FileNotFoundException;
 import java.util.Random;
 
 // Represents a Player that is playing through a console
@@ -32,29 +34,49 @@ public class ConsolePlayer extends Controller {
         ConsoleGame.printBoard(this.getOpponentBoard());
     }
 
+    // EFFECTS: Print the available choices to the player
+    public void printTurnChoices() {
+        System.out.println("\nOur turn Captain. What would you like to do?");
+        String options = "(0) Fire\n(1) View our ships\n(2) View the battlefield\n";
+        options += "(3) Help/Instructions\n(4) [Debug Only] View enemy fleet\n(5) Save the game\n";
+        options += "(6) Quit the game";
+        System.out.println(options);
+    }
+
+    // EFFECTS: Call the appropriate instruction based on choice
+    // REQUIRES: choice is a valid instruction according to printTurnChoices
+    public void mapIntToTurn(int choice) {
+        if (choice == 0) {
+            fire();
+        } else if (choice == 1) {
+            viewBoard();
+        } else if (choice == 2) {
+            peek();
+        } else if (choice == 3) {
+            printHelp();
+        } else if (choice == 4) {
+            cheatViewEnemy();
+        } else if (choice == 5) {
+            try {
+                PersistenceManager.saveGame(getBoard(), getOpponentBoard());
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            System.exit(0);
+        }
+    }
+
     // EFFECTS: Run the player's turn in the game
     // MODIFIES: this
     @Override
     public void turn() {
-        System.out.println("\nOur turn Captain. What would you like to do?");
-        String options = "(0) Fire\n(1) View our ships\n(2) View the battlefield\n";
-        options += "(3) Help/Instructions\n(4) [Debug Only] View enemy fleet\n";
         int choice = -1;
-
         while (choice != 0) {
-            choice = ScannerHelper.clampedQuery(options, 0, 4);
+            printTurnChoices();
+            choice = ScannerHelper.clampedQuery("", 0, 6);
             ConsoleGame.clearConsole();
-            if (choice == 0) {
-                fire();
-            } else if (choice == 1) {
-                viewBoard();
-            } else if (choice == 2) {
-                peek();
-            } else if (choice == 3) {
-                printHelp();
-            } else {
-                cheatViewEnemy();
-            }
+            mapIntToTurn(choice);
             System.out.println();
         }
     }
@@ -119,7 +141,6 @@ public class ConsolePlayer extends Controller {
         System.out.println("We picked a scattershot firing ship.");
         System.out.println("Where shall we fire?");
         Position p = ConsoleGame.queryForPosition(getOpponentBoard().getBoardSize());
-        int boardSize = getOpponentBoard().getBoardSize();
         Position scatter = getOpponentBoard().generateRandomPosition(p, new Random());
         int a = getOpponentBoard().fireOnPosition(p) ? 1 : 0;
         System.out.printf("Shell scattered, and landed on (%d, %d)!\n", scatter.getPosX(), scatter.getPosY());

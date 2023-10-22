@@ -1,7 +1,11 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Persistable;
+
 // Represents a single ship on the game board
-public class Ship {
+public class Ship implements Persistable {
     public static final int ALIVE = 0;
     public static final int DEAD = 1;
     public static final int SCATTER_SHOT_LENGTH = 4;
@@ -49,5 +53,22 @@ public class Ship {
 
     public Position getPosition() {
         return position;
+    }
+
+    @Override
+    public JSONObject save() {
+        JSONObject json = new JSONObject();
+        JSONArray healthArray = new JSONArray();
+        json.put("length", length);
+
+        for (int h : health) {
+            healthArray.put(h);
+        }
+
+        json.put("health", healthArray);
+        json.put("identifier", identifier);
+        json.put("orientation", orientation);
+        json.put("position", position.save());
+        return json;
     }
 }

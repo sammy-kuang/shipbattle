@@ -1,11 +1,15 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Persistable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 // Represents the board for a single player. This is where a player would place their own ships.
-public class Board {
+public class Board implements Persistable {
 
     public static final char EMPTY_SPOT = '~';
     public static final char HIT_SPOT = 'X';
@@ -13,6 +17,9 @@ public class Board {
 
     private final ArrayList<Ship> ships;
     private final int boardSize;
+
+
+
     private char[][] board; // where the first index represents Y and second index represents x
 
     // REQUIRES: 10 >= boardSize > 4
@@ -171,11 +178,34 @@ public class Board {
         return board;
     }
 
+    public void setBoard(char[][] board) {
+        this.board = board;
+    }
+
     public int getBoardSize() {
         return boardSize;
     }
 
     public List<Ship> getShips() {
         return ships;
+    }
+
+    @Override
+    public JSONObject save() {
+        JSONObject out = new JSONObject();
+        JSONArray outShips = new JSONArray();
+        for (Ship s : ships) {
+            outShips.put(s.save());
+        }
+        out.put("ships", outShips);
+        StringBuilder sb = new StringBuilder();
+        for (int y = 0; y < boardSize; y++) {
+            for (int x = 0; x < boardSize; x++) {
+                sb.append(board[y][x]);
+            }
+        }
+        out.put("boardSize", boardSize);
+        out.put("board", sb.toString());
+        return out;
     }
 }

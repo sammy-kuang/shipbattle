@@ -1,9 +1,12 @@
 package model;
 
+import org.json.JSONObject;
+import persistence.Persistable;
+
 // Represents a simple (x,y) coordinate, where
 // an increasing y represents moving downwards
 // and an increasing x represents moving right
-public class Position {
+public class Position implements Persistable {
     private final int posX;
     private final int posY;
 
@@ -19,5 +22,14 @@ public class Position {
 
     public int getPosY() {
         return posY;
+    }
+
+
+    @Override
+    public JSONObject save() {
+        JSONObject out = new JSONObject();
+        out.put("posX", posX);
+        out.put("posY", posY);
+        return out;
     }
 }

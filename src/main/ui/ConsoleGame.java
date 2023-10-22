@@ -1,6 +1,9 @@
 package ui;
 
 import model.*;
+import persistence.PersistenceManager;
+
+import java.io.IOException;
 
 // Represent an instance of the game running in the terminal
 public class ConsoleGame {
@@ -59,35 +62,29 @@ public class ConsoleGame {
         return o == 0 ? Orientation.LeftRight : Orientation.UpDown;
     }
 
-    void playGame(int boardSize, int numShips) {
-        try {
-            Board playerBoard = new Board(boardSize);
-            Board opponentBoard = new Board(boardSize);
-            int turn = 0;
-            ConsolePlayer p = new ConsolePlayer(playerBoard, opponentBoard);
-            RandomController o = new RandomController(opponentBoard, playerBoard);
-            Controller[] players = new Controller[]{p, o};
-            p.placeShips(numShips);
-            o.placeShips(numShips);
-            System.out.println("\nGame is ready to go!");
-            while (playerBoard.isAlive() && opponentBoard.isAlive()) {
-                players[turn].turn();
-                turn = (turn + 1) % 2;
-                Thread.sleep(2000);
+    // EFFECTS: Run the main game loop
+    // REQUIRES: player != opponent
+    void gameLoop(Controller player, Controller opponent) {
+        Controller[] players = new Controller[]{player, opponent};
+        int turn = 0;
+        while (player.getBoard().isAlive() && opponent.getBoard().isAlive()) {
+            players[turn].turn();
+            turn = (turn + 1) % 2;
+            try {
+                Thread.sleep(1500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
-            if (playerBoard.isAlive()) {
-                System.out.println("Congratulations captain, we won!");
-            } else {
-                System.out.println("We lost...");
-            }
-        } catch (InterruptedException e) {
-            System.err.println(e);
+        }
+        if (player.getBoard().isAlive()) {
+            System.out.println("Congratulations captain, we won!");
+        } else {
+            System.out.println("We lost...");
         }
     }
 
-    // EFFECTS: Run the game in a console window
-    void run() {
-        System.out.println("Welcome to Shipbattle!");
+    // EFFECTS: Query the user and opponent to place ships, and run game loop
+    void setupGame() {
         String boardSizeMessage = "Please insert a board size where 10 <= size <= 25  (recommended 10): ";
         int boardSize = ScannerHelper.clampedQuery(boardSizeMessage, 10, 25);
         String numShipsMessage = "Please insert the number of points for ships (even & between 10-16): ";
@@ -95,6 +92,37 @@ public class ConsoleGame {
         do {
             numShips = ScannerHelper.clampedQuery(numShipsMessage, 10, 16);
         } while (numShips % 2 != 0);
-        playGame(boardSize, numShips);
+        Board playerBoard = new Board(boardSize);
+        Board opponentBoard = new Board(boardSize);
+        ConsolePlayer p = new ConsolePlayer(playerBoard, opponentBoard);
+        RandomController o = new RandomController(opponentBoard, playerBoard);
+        p.placeShips(numShips);
+        o.placeShips(numShips);
+        System.out.println("\nGame is ready to go!");
+        gameLoop(p, o);
+    }
+
+    // EFFECTS: Run the game in a console window
+    void run() {
+        System.out.println("Welcome to Shipbattle!");
+        boolean needSetup = false;
+        if (PersistenceManager.doSavesExist()) {
+            needSetup = ScannerHelper.yesNoQuery("We detected a previous game. Would you like to load it?");
+        }
+        if (needSetup) {
+            try {
+                Board playerBoard = PersistenceManager.loadBoard(PersistenceManager.PLAYER_SAVE);
+                Board opponentBoard = PersistenceManager.loadBoard(PersistenceManager.OPPONENT_SAVE);
+                ConsolePlayer player = new ConsolePlayer(playerBoard, opponentBoard);
+                RandomController opponent = new RandomController(opponentBoard, playerBoard);
+                gameLoop(player, opponent);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            setupGame();
+        }
+
+
     }
 }
