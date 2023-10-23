@@ -218,4 +218,26 @@ public class PersistenceTests {
         }
 
     }
+
+    @Test
+    void testPlayerSaveExists() {
+        if (PersistenceManager.doSavesExist()) {
+            new File(PersistenceManager.PLAYER_SAVE).delete();
+            new File(PersistenceManager.OPPONENT_SAVE).delete();
+            assertFalse(PersistenceManager.doSavesExist());
+        }
+
+        try {
+            PersistenceManager.writeToFile(board.save(), PersistenceManager.PLAYER_SAVE);
+            assertFalse(PersistenceManager.doSavesExist());
+            new File(PersistenceManager.PLAYER_SAVE).delete();
+            PersistenceManager.writeToFile(board.save(), PersistenceManager.OPPONENT_SAVE);
+            assertFalse(PersistenceManager.doSavesExist());
+            new File(PersistenceManager.OPPONENT_SAVE).delete();
+            assertFalse(PersistenceManager.doSavesExist());
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
