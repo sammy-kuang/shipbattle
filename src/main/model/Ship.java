@@ -11,7 +11,7 @@ public class Ship implements Persistable {
     public static final int SCATTER_SHOT_LENGTH = 4;
 
     private final int length;
-    private final int[] health;
+    private int[] health;
     private final char identifier;
     private final Orientation orientation;
     private final Position position;
@@ -37,6 +37,10 @@ public class Ship implements Persistable {
 
     public int[] getHealth() {
         return health;
+    }
+
+    public void setHealth(int[] newHealth) {
+        this.health = newHealth;
     }
 
     public char getIdentifier() {

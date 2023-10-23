@@ -42,6 +42,25 @@ public final class PersistenceManager {
         return (new File(PLAYER_SAVE).exists()) && (new File(OPPONENT_SAVE).exists());
     }
 
+    // EFFECTS: Load JSON values of o into a ship and add it into board
+    // REQUIRES: o is a valid JSONObject that resembles a ship
+    // MODIFIES: board
+    private static void loadShipIntoBoard(Object o, Board board) {
+        JSONObject js = (JSONObject)o;
+        JSONObject jp = (JSONObject) js.get("position");
+        Position p = new Position(jp.getInt("posX"), jp.getInt("posY"));
+        Orientation orient = Orientation.valueOf(js.getString("orientation"));
+        JSONArray health = js.getJSONArray("health");
+        int length = js.getInt("length");
+        int[] newHealth = new int[length];
+        for (int i = 0; i < health.length(); i++) {
+            newHealth[i] = health.getInt(i);
+        }
+        Ship s = new Ship(length, (char)js.getInt("identifier"), p, orient);
+        s.setHealth(newHealth);
+        board.addShip(s);
+    }
+
     // EFFECTS: Return a Board based on a JSON loaded from path, modelled after JsonReader from example
     public static Board loadBoard(String path) throws IOException {
         StringBuilder content = new StringBuilder();
@@ -55,12 +74,7 @@ public final class PersistenceManager {
         Board board = new Board(boardSize);
         char[][] b = new char[boardSize][boardSize];
         for (Object o : ships) {
-            JSONObject js = (JSONObject)o;
-            JSONObject jp = (JSONObject) js.get("position");
-            Position p = new Position(jp.getInt("posX"), jp.getInt("posY"));
-            Orientation orient = Orientation.valueOf(js.getString("orientation"));
-            Ship s = new Ship(js.getInt("length"), (char)js.getInt("identifier"), p, orient);
-            board.addShip(s);
+            loadShipIntoBoard(o, board);
         }
         for (int a = 0; a < boardSize * boardSize; a++) {
             b[a / boardSize][a % boardSize] = boardArr.charAt(a);
