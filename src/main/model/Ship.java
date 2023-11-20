@@ -14,7 +14,7 @@ public class Ship implements Persistable {
     private int[] health;
     private final char identifier;
     private final Orientation orientation;
-    private final Position position;
+    private Position position;
 
     // REQUIRES: length > 0
     public Ship(int length, char identifier, Position position, Orientation orientation) {
@@ -57,6 +57,10 @@ public class Ship implements Persistable {
 
     public Position getPosition() {
         return position;
+    }
+
+    public void setPosition(Position pos) {
+        this.position = pos;
     }
 
     // EFFECTS: Save the ship into a JSONObject

@@ -4,12 +4,16 @@ import model.*;
 
 import java.util.Random;
 
-// Represents an "AI" playing the game on a console version of the game
+// Represents an "AI" playing the game
 public class RandomController extends Controller {
+
+    private OutputWriter out;
+
     // EFFECTS: Create an AI capable of playing the game in the terminal
-    public RandomController(Board ourBoard, Board opponent) {
+    public RandomController(Board ourBoard, Board opponent, OutputWriter out) {
         this.setBoard(ourBoard);
         this.setOpponentBoard(opponent);
+        this.out = out;
     }
 
     // EFFECTS: Visualize our board - in the context of the AI, does nothing.
@@ -30,7 +34,7 @@ public class RandomController extends Controller {
     // EFFECTS: Run the AI's turn
     @Override
     public void turn() {
-        System.out.println("[AI] My turn!");
+        out.write("[AI] My turn!");
         fire();
     }
 
@@ -45,7 +49,7 @@ public class RandomController extends Controller {
             int y = Math.abs(r.nextInt() % getOpponentBoard().getBoardSize());
             Position p = new Position(x, y);
             boolean hit = getOpponentBoard().fireOnPosition(p);
-            System.out.printf("[AI] Firing on (%d, %d)!!\n", x, y);
+            out.write(String.format("[AI] Firing on (%d, %d)!!\n", x, y));
             Thread.sleep(1000);
             System.out.println(hit ? "[AI] Ha! Hit you!" : "[AI] Damn... you'll live to see another day...");
             Thread.sleep(2000);

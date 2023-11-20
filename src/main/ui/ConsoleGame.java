@@ -95,7 +95,7 @@ public class ConsoleGame {
         Board playerBoard = new Board(boardSize);
         Board opponentBoard = new Board(boardSize);
         ConsolePlayer p = new ConsolePlayer(playerBoard, opponentBoard);
-        RandomController o = new RandomController(opponentBoard, playerBoard);
+        RandomController o = new RandomController(opponentBoard, playerBoard, System.out::println);
         p.placeShips(numShips);
         o.placeShips(numShips);
         System.out.println("\nGame is ready to go!");
@@ -114,7 +114,7 @@ public class ConsoleGame {
                 Board playerBoard = PersistenceManager.loadBoard(PersistenceManager.PLAYER_SAVE);
                 Board opponentBoard = PersistenceManager.loadBoard(PersistenceManager.OPPONENT_SAVE);
                 ConsolePlayer player = new ConsolePlayer(playerBoard, opponentBoard);
-                RandomController opponent = new RandomController(opponentBoard, playerBoard);
+                RandomController opponent = new RandomController(opponentBoard, playerBoard, System.out::println);
                 gameLoop(player, opponent);
             } catch (IOException e) {
                 throw new RuntimeException(e);
