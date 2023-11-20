@@ -27,3 +27,4 @@ As a user, I want to be able to:
 - View where the number ships I have and where they are currently located
 - Select one of my ships to fire from, and fire on enemy positions using it
 - Save the current state of the game (where ships are positioned, the damage inflicted on them, etc)
+- Load a past save into the current game

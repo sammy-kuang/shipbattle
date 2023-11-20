@@ -190,6 +190,7 @@ public class Board implements Persistable {
         return ships;
     }
 
+    // EFFECTS: Save the current board including all ships into a JSONObject
     @Override
     public JSONObject save() {
         JSONObject out = new JSONObject();

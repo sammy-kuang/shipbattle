@@ -59,6 +59,7 @@ public class Ship implements Persistable {
         return position;
     }
 
+    // EFFECTS: Save the ship into a JSONObject
     @Override
     public JSONObject save() {
         JSONObject json = new JSONObject();

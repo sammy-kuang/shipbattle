@@ -4,6 +4,6 @@ package ui;
 // of the game
 public class Main {
     public static void main(String[] args) {
-        new ConsoleGame();
+        new GuiGame();
     }
 }

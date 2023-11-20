@@ -25,6 +25,7 @@ public class Position implements Persistable {
     }
 
 
+    // EFFECTS: Save the current Position into a JSONObject
     @Override
     public JSONObject save() {
         JSONObject out = new JSONObject();
