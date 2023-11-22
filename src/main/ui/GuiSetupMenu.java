@@ -3,10 +3,7 @@ package ui;
 import model.Orientation;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 // Represents a GUI menu that allows the user to setup their board
 public class GuiSetupMenu extends JPanel {
@@ -25,6 +22,7 @@ public class GuiSetupMenu extends JPanel {
         this.orientationBox = new JComboBox<>(Orientation.values());
         JButton button = new JButton("Create ship");
         this.spinner = new JSpinner();
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
         button.addActionListener(e -> {
             if (remainingPoints > 0) {

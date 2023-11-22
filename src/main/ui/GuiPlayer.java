@@ -3,12 +3,12 @@ package ui;
 import model.Position;
 import model.Ship;
 
-import javax.swing.*;
 import java.util.Random;
 
+// Represents the player playing on the GUI version of the game
 public class GuiPlayer extends Controller {
 
-    private GuiGameStateTextBox out;
+    private final GuiGameStateTextBox out;
     private Ship shipToFireWith = null;
     private int shots = 0;
     private int hits = 0;
@@ -56,7 +56,7 @@ public class GuiPlayer extends Controller {
     @Override
     public void placeShips(int number) {
         out.write("Let's place our ships down!");
-        out.write("At the top of this panel, set your desired ship configuration, then press 'Create ship'");
+        out.write("At the bottom of this panel, set your desired ship configuration, then press 'Create ship'");
         out.write("Then click any tile on our board when you're ready to place it down");
     }
 
@@ -102,7 +102,7 @@ public class GuiPlayer extends Controller {
             hits += opp.fireOnPosition(position) ? 1 : 0;
             hits += opp.fireOnPosition(scatter) ? 1 : 0;
             out.write(String.format("Shell scattered, landing on %s.", scatter.toString()));
-            opp.showHitLocations();
+            opp.updateGrid();
             onTurnEnd();
         };
     }
@@ -120,7 +120,7 @@ public class GuiPlayer extends Controller {
             hits += hit ? 1 : 0;
             shots--;
             out.write(String.format("%d shots remaining.", shots));
-            opp.showHitLocations();
+            opp.updateGrid();
             if (shots <= 0) {
                 onTurnEnd();
             }
@@ -132,6 +132,7 @@ public class GuiPlayer extends Controller {
     private void onTurnEnd() {
         GuiBoard opp = (GuiBoard) getOpponentBoard();
         GuiBoard us = (GuiBoard) getBoard();
+        opp.updateGrid();
         out.write(String.format("We hit the enemy a total of %d times.\n\n", hits));
         hits = 0;
 
@@ -143,7 +144,7 @@ public class GuiPlayer extends Controller {
         opp.setGridClicked(null);
         enemyController.turn();
         out.write("\n\n");
-        us.showAllShips();
+        us.updateGrid();
         if (!getBoard().isAlive()) {
             endGame();
         } else {
