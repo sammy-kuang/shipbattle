@@ -50,9 +50,7 @@ public class RandomController extends Controller {
             Position p = new Position(x, y);
             boolean hit = getOpponentBoard().fireOnPosition(p);
             out.write(String.format("[AI] Firing on (%d, %d)!!\n", x, y));
-            Thread.sleep(1000);
-            System.out.println(hit ? "[AI] Ha! Hit you!" : "[AI] Damn... you'll live to see another day...");
-            Thread.sleep(2000);
+            out.write(hit ? "[AI] Ha! Hit you!" : "[AI] Damn... you'll live to see another day...");
         } catch (Exception e) {
             System.err.println(e);
         }

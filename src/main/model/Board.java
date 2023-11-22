@@ -18,8 +18,6 @@ public class Board implements Persistable {
     private final ArrayList<Ship> ships;
     private final int boardSize;
 
-
-
     private char[][] board; // where the first index represents Y and second index represents x
 
     // REQUIRES: 10 >= boardSize > 4
@@ -172,6 +170,18 @@ public class Board implements Persistable {
         int x = Utils.clamp(position.getPosX() + n, 0, getBoardSize() - 1);
         int y = Utils.clamp(position.getPosY() + n, 0, getBoardSize() - 1);
         return new Position(x, y);
+    }
+
+    // EFFECTS: Return a reference to a ship with identifier if exists
+    //          If not, return null
+    public Ship getShipByIdentifier(char identifier) {
+        for (Ship s : getShips()) {
+            if (s.getIdentifier() == identifier) {
+                return s;
+            }
+        }
+
+        return null;
     }
 
     public char[][] getBoard() {

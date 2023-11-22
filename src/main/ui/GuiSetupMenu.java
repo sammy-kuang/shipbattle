@@ -66,7 +66,7 @@ public class GuiSetupMenu extends JPanel {
 
     // EFFECTS: Return a formatted String to go into the setup label
     private String generateLabelText() {
-        return String.format("You have %d points remaining.", this.remainingPoints);
+        return String.format("You have %2d points remaining.", this.remainingPoints);
     }
 
     public int getRemainingPoints() {

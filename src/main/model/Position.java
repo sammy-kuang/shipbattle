@@ -24,6 +24,11 @@ public class Position implements Persistable {
         return posY;
     }
 
+    // EFFECTS: Return position in a nice clean format
+    @Override
+    public String toString() {
+        return String.format("(%d,%d)", getPosX(), getPosY());
+    }
 
     // EFFECTS: Save the current Position into a JSONObject
     @Override

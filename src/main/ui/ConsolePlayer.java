@@ -53,7 +53,7 @@ public class ConsolePlayer extends Controller {
         } else if (choice == 2) {
             peek();
         } else if (choice == 3) {
-            printHelp();
+            printHelp(System.out::println);
         } else if (choice == 4) {
             cheatViewEnemy();
         } else if (choice == 5) {
@@ -106,32 +106,34 @@ public class ConsolePlayer extends Controller {
     }
 
     // EFFECTS: Print the user a help screen
-    public void printHelp() {
-        System.out.println("When prompted for a coordinate (x,y), (0, 0) is relative to the top left.");
-        System.out.println("Positive in the x-axis is right, and positive in the y-axis is down.");
-        System.out.println("This means (1,1) is 1 unit to the right, and 1 down.");
-        System.out.println("\nIn terms of firing: ");
-        printFireHelp();
-        System.out.println("\nIn terms of interpreting the map: ");
-        printMapHelp();
+    public static void printHelp(OutputWriter out) {
+        out.write("When prompted for a coordinate (x,y), (0, 0) is relative to the top left.");
+        out.write("Positive in the x-axis is right, and positive in the y-axis is down.");
+        out.write("This means (1,1) is 1 unit to the right, and 1 down.");
+        out.write("\nIn terms of firing: ");
+        printFireHelp(out);
+        out.write("\nIn terms of interpreting the map: ");
+        printMapHelp(out);
     }
 
     // EFFECTS: Show the user a help message on how to interpret the "map" of the game
-    public void printMapHelp() {
-        System.out.println("When you view the your own fleet, you may see a variety of symbols");
-        System.out.printf("%c represents an empty spot on the board, unoccupied.\n", Board.EMPTY_SPOT);
-        System.out.printf("%c represents an where a shell was fired on the board, but missed.\n", Board.MISS_SPOT);
-        System.out.printf("%c represents an where a shell was fired on the board, and hit!.\n", Board.HIT_SPOT);
-        System.out.println("All other sequences of characters (a-Z), symbols, etc, represent a ship.\n");
-        System.out.println("When you view the battlefield, you do not see the enemy ships! Just what you've fired at.");
+    public static void printMapHelp(OutputWriter out) {
+        out.write("When you view the your own fleet, you may see a variety of symbols");
+        out.write(String.format("%c represents an empty spot on the board, unoccupied.\n", Board.EMPTY_SPOT));
+        String s = String.format("%c ", Board.MISS_SPOT);
+        s += "represents an where a shell was fired on the board, but missed.\n";
+        out.write(s);
+        out.write(String.format("%c represents an where a shell was fired on the board, and hit!.\n", Board.HIT_SPOT));
+        out.write("All other sequences of characters (a-Z), symbols, etc, represent a ship.\n");
+        out.write("When you view the battlefield, you do not see the enemy ships! Just what you've fired at.");
     }
 
     // EFFECTS: Show the user a help message on the benefits of firing with different ships
-    public void printFireHelp() {
-        System.out.printf("If we use a smaller ship (size <= %d)", Ship.SCATTER_SHOT_LENGTH);
-        System.out.println(", we can load a scattershot shell -\na shell that fires a smaller shell nearby.");
-        System.out.printf("If we use a bigger ship (size > %d),", Ship.SCATTER_SHOT_LENGTH);
-        System.out.println(" we can load multiple shells -\nso we can fire multiple times.");
+    public static void printFireHelp(OutputWriter out) {
+        out.write(String.format("If we use a smaller ship (size <= %d)", Ship.SCATTER_SHOT_LENGTH));
+        out.write(", we can load a scattershot shell -\na shell that fires a smaller shell nearby.");
+        out.write(String.format("If we use a bigger ship (size > %d),", Ship.SCATTER_SHOT_LENGTH));
+        out.write(" we can load multiple shells -\nso we can fire multiple times.");
     }
 
     // EFFECTS: Query the user to fire a scattershot at a position, returning number of hits based on scatter shell

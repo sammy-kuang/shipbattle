@@ -2,27 +2,24 @@ package ui;
 
 import model.Board;
 import model.Position;
-import model.Ship;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class GuiBoard extends Board {
 
-    private ArrayList<Button> gridButtons;
+    private final ArrayList<Button> gridButtons;
 
-    private JPanel content;
-    private JPanel grid;
+    private final JPanel content;
 
     // EFFECTS: Create a panel with a grid of buttons
     public GuiBoard(int boardSize, String title) {
         super(boardSize);
         this.content = new JPanel();
         this.gridButtons = new ArrayList<>();
-        this.grid = new JPanel();
+        JPanel grid = new JPanel();
 
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
 
@@ -43,12 +40,17 @@ public class GuiBoard extends Board {
     }
 
     // EFFECTS: Set the event for when a button is clicked on the grid
+    //          If onClicked is null, clicking a button will do nothing
     // MODIFIES: this
     public void setGridClicked(GuiGridClicked onClicked) {
         for (Button b : gridButtons) {
             // clear previous action listeners
             for (ActionListener a : b.getActionListeners()) {
                 b.removeActionListener(a);
+            }
+
+            if (onClicked == null) {
+                continue;
             }
 
             b.addActionListener(e -> {
@@ -87,18 +89,6 @@ public class GuiBoard extends Board {
 
     public JPanel getContent() {
         return content;
-    }
-
-    public void setContent(JPanel content) {
-        this.content = content;
-    }
-
-    public JPanel getGrid() {
-        return grid;
-    }
-
-    public void setGrid(JPanel grid) {
-        this.grid = grid;
     }
 
 }

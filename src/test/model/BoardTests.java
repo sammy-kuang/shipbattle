@@ -257,4 +257,24 @@ class BoardTests {
         int b_y = Math.abs(i.getPosY() - b.getPosY());
         assertTrue(b_x == 1 && b_y == 1);
     }
+
+    @Test
+    void testGetShipByIdentifier() {
+        Ship s = new Ship(6, 'A', new Position(0, 0), Orientation.LeftRight);
+        Ship m = new Ship(6, 'B', new Position(1, 1), Orientation.LeftRight);
+
+        assertTrue(board.addShip(s));
+        assertTrue(board.addShip(m));
+
+        assertEquals(s, board.getShipByIdentifier('A'));
+        assertEquals(m, board.getShipByIdentifier('B'));
+        assertNull(board.getShipByIdentifier('C'));
+    }
+
+    @Test
+    void testPositionString() {
+        assertEquals("(1,2)", new Position(1,2).toString());
+        assertEquals("(2,1)", new Position(2,1).toString());
+        assertEquals("(0,0)", new Position(0,0).toString());
+    }
 }

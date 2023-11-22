@@ -1,5 +1,6 @@
 package ui;
 
+import model.Orientation;
 import model.Ship;
 
 import javax.swing.*;
@@ -33,9 +34,9 @@ public class GuiGame {
     }
 
 
-    // EFFECTS: Set up the game given the options from the setup menu
+    // EFFECTS: Set up a new game given the options from the setup menu
     // MODIFIES: this
-    private void setupGame() {
+    private void setupNewGame() {
         playerBoard = new GuiBoard(getBoardSize(), "Player");
         playerBoard.showAllShips();
         enemyBoard = new GuiBoard(getBoardSize(), "Enemy");
@@ -44,10 +45,12 @@ public class GuiGame {
         createSetupMenu();
         createMainGame();
 
-        player = new GuiPlayer(playerBoard, enemyBoard, gameState);
         enemy = new RandomController(enemyBoard, playerBoard, (text) -> gameState.write(text));
+        player = new GuiPlayer(playerBoard, enemyBoard, enemy, gameState);
 
-        player.placeShips(getNumShips());
+        player.placeShips(getNumShips()); // Query the user to place their ships
+        enemy.placeShips(getNumShips());
+        enemyBoard.showAllShips();
     }
 
 
@@ -108,7 +111,7 @@ public class GuiGame {
         done.addActionListener(e -> {
             window.setVisible(false);
             window.dispose();
-            setupGame();
+            setupNewGame();
         });
         content.add(done);
         window.add(content);
@@ -123,27 +126,38 @@ public class GuiGame {
         this.setupMenu = new GuiSetupMenu(getNumShips(), null);
 
         // When we click on the "Create ship" button
-        this.setupMenu.setOnClick((newValue, orientation) -> {
-            if (shipToBePlaced != null) {
-                return; // We don't want to create a new ship if we are placing something down
-            }
-            String s = String.format("Creating ship of size %d of orientation %s", newValue, orientation.toString());
-            gameState.write(s);
-            shipToBePlaced = new Ship(newValue, playerBoard.generateIdentifier(), null, orientation);
-            playerBoard.setGridClicked((i, position) -> {
-                shipToBePlaced.setPosition(position);
-                if (playerBoard.addShip(shipToBePlaced)) {
-                    shipToBePlaced = null;
-                    playerBoard.showAllShips();
-                } else {
-                    gameState.write("Failed to put a ship there, try again.");
-                }
-            });
-            setupMenu.setRemainingPoints(setupMenu.getRemainingPoints() - newValue);
-            setupMenu.setOnClick((newValue1, orientation1) -> {
+        this.setupMenu.setOnClick(this::createShipButton);
+    }
 
-            });
+    // EFFECTS: Switch the player's board into a ship placing mode when the createShip button is clicked
+    // REQUIRES: shipSize > 0 && shipSize is even
+    // MODIFIES: this
+    private void createShipButton(int shipSize, Orientation orientation) {
+        if (shipToBePlaced != null) {
+            return; // We don't want to create a new ship if we are placing something down
+        }
+        String s = String.format("Creating ship of size %d of orientation %s", shipSize, orientation.toString());
+        gameState.write(s);
+        shipToBePlaced = new Ship(shipSize, playerBoard.generateIdentifier(), null, orientation);
+        playerBoard.setGridClicked((i, position) -> {
+            if (shipToBePlaced == null) {
+                return;
+            }
+
+            shipToBePlaced = new Ship(shipSize, shipToBePlaced.getIdentifier(), position, orientation);
+            if (playerBoard.addShip(shipToBePlaced)) {
+                shipToBePlaced = null;
+                playerBoard.showAllShips();
+
+                if (setupMenu.getRemainingPoints() <= 0) {
+                    // start the game!
+                    player.turn();
+                }
+            } else {
+                gameState.write("Failed to put a ship there, try again.");
+            }
         });
+        setupMenu.setRemainingPoints(setupMenu.getRemainingPoints() - shipSize);
     }
 
     public int getBoardSize() {
