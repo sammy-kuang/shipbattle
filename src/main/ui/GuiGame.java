@@ -5,10 +5,12 @@ import model.Orientation;
 import model.Ship;
 import persistence.PersistenceManager;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -36,7 +38,6 @@ public class GuiGame {
     public GuiGame() {
         JFrame f = createSettingsMenu();
         f.setLocationRelativeTo(null);
-        addLoadingToSettings(f);
         f.setVisible(true);
     }
 
@@ -138,33 +139,52 @@ public class GuiGame {
     // MODIFIES: this
     private JFrame createSettingsMenu() {
         JFrame window = new JFrame();
-        window.setLayout(new FlowLayout());
+        window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+//        window.setPreferredSize(new Dimension(600, 200));
+        // add splash
         JPanel content = new JPanel();
+        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+        try {
+            JLabel splash = new JLabel(new ImageIcon(ImageIO.read(new File("data/splash.png"))));
+            content.add(splash);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        addSettingsToMenu(window, content);
+        addLoadingToSettings(window, content);
+        window.add(content);
+        window.pack();
+        return window;
+    }
+
+    // EFFECTS: Add actual settings controls to the settings menu
+    // MODIFIES: menu
+    private void addSettingsToMenu(JFrame window, JPanel content) {
+        JPanel settingsPanel = new JPanel();
+        settingsPanel.setLayout(new BoxLayout(settingsPanel, BoxLayout.X_AXIS));
         SpinnerNumberModel boardSizeModel = new SpinnerNumberModel(10, 10, 25, 1);
         SpinnerNumberModel numShipsModel = new SpinnerNumberModel(10, 10, 16, 2);
         JSpinner boardSize = new JSpinner(boardSizeModel);
         JSpinner numShips = new JSpinner(numShipsModel);
         boardSizeModel.addChangeListener(e -> setBoardSize((int)boardSizeModel.getValue()));
         numShips.addChangeListener(e -> setNumShips((int)numShipsModel.getValue()));
-        content.add(new JLabel("Board size: "));
-        content.add(boardSize);
-        content.add(new JLabel("Number of ships: "));
-        content.add(numShips);
+        settingsPanel.add(new JLabel("Board size: "));
+        settingsPanel.add(boardSize);
+        settingsPanel.add(new JLabel("Number of ships: "));
+        settingsPanel.add(numShips);
         JButton done = new JButton("Start");
         done.addActionListener(e -> {
             window.setVisible(false);
             window.dispose();
             setupNewGame();
         });
-        content.add(done);
-        window.add(content);
-        window.pack();
-        return window;
+        settingsPanel.add(done);
+        content.add(settingsPanel);
     }
 
     // EFFECTS: Add a load previous game button to the settings menu, if the data exists
     // MODIFIES: settingsMenu
-    private void addLoadingToSettings(JFrame settingsMenu) {
+    private void addLoadingToSettings(JFrame settingsMenu, JPanel content) {
         if (PersistenceManager.doSavesExist()) {
             JPanel panel = new JPanel();
             panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -185,7 +205,7 @@ public class GuiGame {
                     throw new RuntimeException(ex);
                 }
             });
-            settingsMenu.add(panel);
+            content.add(panel);
             settingsMenu.pack();
         }
     }
