@@ -6,11 +6,11 @@ import model.Ship;
 import persistence.PersistenceManager;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 public class GuiGame {
     private GuiPlayer player;
@@ -24,6 +24,7 @@ public class GuiGame {
 
     private GuiSetupMenu setupMenu;
     private GuiGameStateTextBox gameState;
+    private JFrame window;
 
     public static final int WINDOW_WIDTH = 1280;
     public static final int WINDOW_HEIGHT = 900;
@@ -34,6 +35,7 @@ public class GuiGame {
     // EFFECTS: Create an instance of the GUI version of the game
     public GuiGame() {
         JFrame f = createSettingsMenu();
+        f.setLocationRelativeTo(null);
         addLoadingToSettings(f);
         f.setVisible(true);
     }
@@ -75,7 +77,8 @@ public class GuiGame {
     // EFFECTS: Create a window that displays the game
     // REQUIRES: Called after either setupNewGame() or setupLoadedGame()
     private void createMainGame() {
-        JFrame window = new JFrame();
+        window = new JFrame();
+        addCloseSavePrompt();
         JPanel content = new JPanel();
         JPanel grids = new JPanel();
         JPanel rhs = createGameStatePanel();
@@ -84,7 +87,7 @@ public class GuiGame {
         }
         content.setLayout(new BoxLayout(content, BoxLayout.X_AXIS));
         grids.setLayout(new BoxLayout(grids, BoxLayout.Y_AXIS));
-        window.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        window.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         window.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         grids.add(enemyBoard.getContent());
         grids.add(playerBoard.getContent());
@@ -95,7 +98,7 @@ public class GuiGame {
         content.add(rhs);
         window.add(content);
         window.pack();
-        window.setResizable(false);
+        window.setLocationRelativeTo(null);
         window.setVisible(true);
     }
 
@@ -112,11 +115,21 @@ public class GuiGame {
         saveButton.addActionListener(e -> {
             try {
                 PersistenceManager.saveGame(playerBoard, enemyBoard);
+                gameState.write("Saved the game.");
             } catch (FileNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
         });
+
+        JButton helpButton = new JButton("Print Help");
+        helpButton.addActionListener(e -> {
+            ConsolePlayer.printHelp(o -> {
+                gameState.write(o);
+            });
+        });
+
         rhs.add(saveButton);
+        rhs.add(helpButton);
 
         return rhs;
     }
@@ -215,6 +228,18 @@ public class GuiGame {
             }
         });
         setupMenu.setRemainingPoints(setupMenu.getRemainingPoints() - shipSize);
+    }
+
+    // EFFECTS: Add a prompt to save the game when the user closes the game
+    // MODIFIES: this
+    void addCloseSavePrompt() {
+        window.addWindowListener(new GuiSavePrompt(e -> {
+            try {
+                PersistenceManager.saveGame(playerBoard, enemyBoard);
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+        }));
     }
 
     public int getBoardSize() {
