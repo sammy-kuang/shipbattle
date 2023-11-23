@@ -169,7 +169,7 @@ public class GuiGame {
     private void addSettingsToMenu(JFrame window, JPanel content) {
         JPanel settingsPanel = new JPanel();
         settingsPanel.setLayout(new BoxLayout(settingsPanel, BoxLayout.X_AXIS));
-        SpinnerNumberModel boardSizeModel = new SpinnerNumberModel(10, 10, 25, 1);
+        SpinnerNumberModel boardSizeModel = new SpinnerNumberModel(10, 10, 16, 1);
         SpinnerNumberModel numShipsModel = new SpinnerNumberModel(10, 10, 16, 2);
         JSpinner boardSize = new JSpinner(boardSizeModel);
         JSpinner numShips = new JSpinner(numShipsModel);
