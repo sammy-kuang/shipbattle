@@ -10,6 +10,8 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -112,15 +114,15 @@ public class GuiGame {
         gameState = new GuiGameStateTextBox();
         rhs.add(gameState.getScrollPane());
 
-        JButton saveButton = new JButton("Save");
-        saveButton.addActionListener(e -> {
-            try {
-                PersistenceManager.saveGame(playerBoard, enemyBoard);
-                gameState.write("Saved the game.");
-            } catch (FileNotFoundException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
+//        JButton saveButton = new JButton("Save");
+//        saveButton.addActionListener(e -> {
+//            try {
+//                PersistenceManager.saveGame(playerBoard, enemyBoard);
+//                gameState.write("Saved the game.");
+//            } catch (FileNotFoundException ex) {
+//                throw new RuntimeException(ex);
+//            }
+//        });
 
         JButton helpButton = new JButton("Print Help");
         helpButton.addActionListener(e -> {
@@ -129,10 +131,22 @@ public class GuiGame {
             });
         });
 
-        rhs.add(saveButton);
+
         rhs.add(helpButton);
+        addCheatView(rhs);
 
         return rhs;
+    }
+
+    // EFFECTS: Add a checkbox to the game state panel to allow the user to peek at the opponents board
+    // MODIFIES: panel
+    private void addCheatView(JPanel panel) {
+        JCheckBox checkbox = new JCheckBox("Cheat view");
+        checkbox.addItemListener(e -> {
+            enemyBoard.setVisibility(e.getStateChange() == ItemEvent.SELECTED);
+            enemyBoard.updateGrid();
+        });
+        panel.add(checkbox);
     }
 
     // EFFECTS: Create menu to prompt the user for the settings of the game
