@@ -7,15 +7,13 @@ import persistence.PersistenceManager;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+// Represents a GUI version of the game
 public class GuiGame {
     private GuiPlayer player;
     private RandomController enemy;
@@ -125,12 +123,7 @@ public class GuiGame {
 //        });
 
         JButton helpButton = new JButton("Print Help");
-        helpButton.addActionListener(e -> {
-            ConsolePlayer.printHelp(o -> {
-                gameState.write(o);
-            });
-        });
-
+        helpButton.addActionListener(e -> ConsolePlayer.printHelp(o -> gameState.write(o)));
 
         rhs.add(helpButton);
         addCheatView(rhs);
