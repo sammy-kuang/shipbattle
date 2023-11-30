@@ -122,7 +122,9 @@ public class ConsoleGame {
         } else {
             setupGame();
         }
-
-
+        // PRINT OUT ALL EVENTS
+        for (Event ev : EventLog.getInstance()) {
+            System.out.printf("%s: %s\n", ev.getDate(), ev.getDescription());
+        }
     }
 }
