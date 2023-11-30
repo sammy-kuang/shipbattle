@@ -1,5 +1,7 @@
 package ui;
 
+import model.EventLog;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -40,6 +42,11 @@ public class GuiSavePrompt extends JFrame implements WindowListener {
     @Override
     public void windowClosing(WindowEvent e) {
         this.setVisible(true);
+
+        // Print out events
+        for (model.Event ev : EventLog.getInstance()) {
+            System.out.printf("%s: %s\n", ev.getDate(), ev.getDescription());
+        }
     }
 
     // EFFECTS: Nothing

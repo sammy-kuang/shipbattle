@@ -43,37 +43,43 @@ public class Board implements Persistable {
         - returns false if we are unable to put down the ship
         - returns false if board already contains ship
         - returns true if ship is put down at its requested position
-
+    MODIFIES: this
     */
     public boolean addShip(Ship ship) {
         if (ships.contains(ship)) {
             return false;
         }
-
         char[][] copy = new char[boardSize][boardSize];
-
         // let's clone the current board, so we can fall back onto it
         for (int y = 0; y < boardSize; y++) {
             System.arraycopy(board[y], 0, copy[y], 0, boardSize);
         }
-
         try {
-            for (int i = 0; i < ship.getLength(); i++) {
-                if (ship.getOrientation() == Orientation.UpDown) {
-                    int newY = ship.getPosition().getPosY() + i;
-                    placeIdentifier(newY, ship.getPosition().getPosX(), ship.getIdentifier());
-                } else {
-                    int newX = ship.getPosition().getPosX() + i;
-                    placeIdentifier(ship.getPosition().getPosY(), newX, ship.getIdentifier());
-                }
-            }
+            layIdentifiers(ship);
         } catch (Exception e) {
             // Restore initial state
             this.board = copy;
             return false;
         }
         ships.add(ship);
+        // LOGGING
+        String message = (String.format("Added ship %s at %s", ship.getIdentifier(), ship.getPosition()));
+        EventLog.getInstance().logEvent(new Event(message));
         return true;
+    }
+
+    // EFFECTS: Lay out identifiers on the board as a helper function of addShip
+    // MODIFIES: this
+    private void layIdentifiers(Ship ship) throws Exception {
+        for (int i = 0; i < ship.getLength(); i++) {
+            if (ship.getOrientation() == Orientation.UpDown) {
+                int newY = ship.getPosition().getPosY() + i;
+                placeIdentifier(newY, ship.getPosition().getPosX(), ship.getIdentifier());
+            } else {
+                int newX = ship.getPosition().getPosX() + i;
+                placeIdentifier(ship.getPosition().getPosY(), newX, ship.getIdentifier());
+            }
+        }
     }
 
     /*
@@ -136,6 +142,10 @@ public class Board implements Persistable {
         board[position.getPosY()][position.getPosX()] = Board.HIT_SPOT;
 
         s.getHealth()[ind] = Ship.DEAD;
+
+        // PERFORM LOGGING
+        EventLog.getInstance().logEvent(new Event(String.format("Fired on board at position %s", position)));
+
         return true;
     }
 
